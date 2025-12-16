@@ -1,0 +1,30 @@
+{
+  "extends": "@tsconfig/svelte/tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "checkJs": true,
+    "moduleResolution": "bundler",
+    "types": ["vite/client"],
+    "paths": {
+      "$lib/*": ["./traders-app/src/lib/*"],
+      "$components/*": ["./traders-app/src/components/*"],
+      "$stores/*": ["./traders-app/src/stores/*"],
+      "$contexts/*": ["./traders-app/src/contexts/*"],
+      "$services/*": ["./traders-app/src/services/*"],
+      "$mocks/*": ["./traders-app/src/mocks/*"]
+    }
+  },
+  "include": [
+    "traders-app/src/**/*.ts",
+    "traders-app/src/**/*.js",
+    "traders-app/src/**/*.svelte"
+  ],
+  "exclude": ["node_modules", "dist", "traders-app/dist"]
+}

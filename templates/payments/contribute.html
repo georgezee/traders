@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 py-12">
+  <div class="text-center max-w-2xl mx-auto">
+    <h1 class="text-3xl font-bold">Support the Traders project</h1>
+    <p class="mt-3 text-base-content/70">Choose how you would like to contribute.</p>
+  </div>
+
+  <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    {% for tier in tiers %}
+      <div class="bg-base-200 border border-base-300 rounded-3xl p-6 shadow-lg flex flex-col">
+        <div class="text-sm uppercase tracking-wide text-primary font-semibold">{{ tier.tier_label }}</div>
+        <h2 class="mt-2 text-2xl font-bold">{{ tier.name }}</h2>
+        <hr aria-hidden="true" class="mt-5 w-full border-t-2 border-primary">
+        <div class="mt-4">
+          <span class="text-base-content/70 text-sm">{{ tier.contribution_label|default:"Contribution" }}</span>
+          {% if tier.usd_amount %}
+            <p class="text-3xl font-semibold">${{ tier.usd_amount|floatformat:2 }}*</p>
+            <p class="text-sm text-base-content/70 mt-1">{{ tier.display_amount }}</p>
+          {% else %}
+            <p class="text-3xl font-semibold">{{ tier.display_amount }}</p>
+            <p class="text-sm text-base-content/70 mt-1">&nbsp;</p>
+          {% endif %}
+        </div>
+        <ul class="mt-6 space-y-3 text-sm flex-1">
+          {% for benefit in tier.benefits %}
+            <li class="flex gap-3"><span class="text-primary">•</span><span>{{ benefit }}</span></li>
+          {% endfor %}
+        </ul>
+        <a href="{% url 'payments:contribute_checkout' %}?tier={{ tier.key }}" class="btn btn-primary btn-block mt-10">{{ tier.cta }}</a>
+      </div>
+    {% endfor %}
+  </div>
+  <p class="mt-8 text-sm text-base-content/60 text-center sm:text-left">
+    * USD amounts are approximate and based on an exchange rate of 1 {{ exchange_rate.target_currency }} ≈
+    {% if exchange_rate_inverse %}R{{ exchange_rate_inverse|floatformat:2 }}{% else %}{{ exchange_rate.rate|floatformat:4 }} {{ exchange_rate.source_currency }}{% endif %}
+    (South African Rand),
+    retrieved on {{ exchange_rate.fetched_at|date:"j F Y" }}.
+    <a href="{{ exchange_rate_url }}" target="_blank" rel="noopener noreferrer" class="link">Check the current USD/ZAR rate</a>.
+  </p>
+</div>
+{% endblock %}

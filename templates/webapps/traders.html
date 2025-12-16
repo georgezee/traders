@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block hamburger_dropdown %}{% endblock %}
+
+{% block content %}
+<link href="{% static 'webapps/traders/assets/index.css' %}" rel="stylesheet">
+<!-- Ensure node backgrounds inherit parent daisyUI theme variables -->
+<style>
+  /* Remove container constraints for traders page */
+  #content-main {
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Make webapp take full viewport width */
+  #traders-webapp {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    min-height: calc(45vh);
+    max-width: 98vw;
+    overflow-x: hidden;
+  }
+</style>
+<div
+  id="traders-webapp"
+></div>
+<script type="module" src="{% static 'webapps/traders/index.js' %}"></script>
+
+<script>
+// Handle status banner close functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const statusBanner = document.getElementById('draft-banner');
+  const closeButton = document.getElementById('close-draft-banner');
+
+  if (statusBanner && closeButton) {
+    closeButton.addEventListener('click', function() {
+      statusBanner.style.display = 'none';
+    });
+  }
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{
+  "type": "module",
+  "scripts": {
+    "build:css": "postcss static/css/input.css -o static/css/output.css",
+    "watch:css": "npx tailwindcss -i ./static/css/input.css -o ./static/css/output.css --watch"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^5.1.0",
+    "@tailwindcss/cli": "^4.1.10",
+    "@tailwindcss/postcss": "^4.1.7",
+    "@tailwindcss/typography": "^0.5.16",
+    "daisyui": "^5.0.42",
+    "postcss": "^8.5.3",
+    "postcss-cli": "^11.0.1",
+    "tailwindcss": "^4.1.7"
+  }
+}

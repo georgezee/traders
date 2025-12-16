@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-12">
+  <a href="{% url 'payments:contribute' %}" class="link link-hover flex items-center gap-2 text-sm text-base-content/70">
+    <span aria-hidden="true">←</span>
+    Choose a different tier
+  </a>
+
+  <div class="mt-6 bg-base-200 border border-base-300 rounded-3xl shadow-lg">
+    <div class="p-6 md:p-8 border-b border-base-300">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <p class="text-sm uppercase tracking-wide text-primary font-semibold">{{ tier.tier_label }}</p>
+          <h1 class="text-3xl font-bold">{{ tier.name }}</h1>
+        </div>
+        <div class="md:text-right">
+          <p class="text-sm text-base-content/70">{{ tier.contribution_label|default:"Contribution" }}</p>
+          {% if tier_usd_amount %}
+            <p class="text-3xl font-semibold">${{ tier_usd_amount|floatformat:2 }}*</p>
+            <p class="text-sm text-base-content/70 mt-1">{{ tier.display_amount }}</p>
+          {% else %}
+            <p class="text-3xl font-semibold">{{ tier.display_amount }}</p>
+          {% endif %}
+        </div>
+      </div>
+      <ul class="mt-6 grid gap-3 text-sm md:grid-cols-1">
+        {% for benefit in tier.benefits %}
+          <li class="flex gap-3"><span class="text-primary">•</span><span>{{ benefit }}</span></li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <form method="post" class="p-6 md:p-8 space-y-6">
+      {% csrf_token %}
+      <input type="hidden" name="tier" value="{{ tier_key }}">
+
+      {% if tier.amount_type == 'fixed' %}
+        <input type="hidden" name="amount" value="{{ tier.amount }}">
+        <p class="text-base leading-relaxed text-base-content/80">You'll contribute <span class="font-semibold">{{ tier.display_amount }}</span> to keep the Traders mission moving.</p>
+      {% else %}
+        <div>
+          <label class="block font-semibold text-lg" for="amount">Choose your amount</label>
+          <div class="mt-4 grid gap-4 sm:grid-cols-2">
+            <div>
+              <label class="block text-sm font-medium text-base-content/80" for="amount_usd">Amount in USD</label>
+              <div class="mt-2 flex items-center gap-2">
+                <span class="text-xl font-semibold">$</span>
+                <input id="amount_usd" name="amount_usd" type="number" min="0.01" step="0.01" inputmode="decimal" class="input input-bordered w-full" value="{{ amount_usd_value }}">
+              </div>
+              <p class="mt-2 text-xs text-base-content/60">This is converted to ZAR using today's exchange rate.</p>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-base-content/80" for="amount">Amount in ZAR</label>
+              <div class="mt-2 flex items-center gap-2">
+                <span class="text-xl font-semibold">R</span>
+                <input id="amount" name="amount" type="number" min="0.01" step="0.01" inputmode="decimal" class="input input-bordered w-full" value="{{ amount_value }}" required>
+              </div>
+            </div>
+          </div>
+          <p class="mt-3 text-sm text-base-content/70">Paystack charges are processed in ZAR; we'll show the USD equivalent for convenience.</p>
+        </div>
+      {% endif %}
+
+      {% if tier.allow_frequency %}
+        <div>
+          <span class="block font-medium">How often would you like to support?</span>
+          <div class="mt-3 flex flex-col sm:flex-row gap-3">
+            <label class="flex items-center gap-2 bg-base-100 border border-base-300 rounded-xl px-4 py-3 cursor-pointer">
+              <input type="radio" name="frequency" value="once" class="radio radio-primary" {% if frequency == 'once' %}checked{% endif %}>
+              <span class="text-sm font-medium">Once-off</span>
+            </label>
+            <label class="flex items-center gap-2 bg-base-100 border border-base-300 rounded-xl px-4 py-3 cursor-pointer">
+              <input type="radio" name="frequency" value="monthly" class="radio radio-primary" {% if frequency == 'monthly' %}checked{% endif %}>
+              <span class="text-sm font-medium">Monthly</span>
+            </label>
+          </div>
+        </div>
+      {% endif %}
+
+      <div>
+        <label class="block font-medium" for="supporter_name">Name for our supporters list <span class="text-base-content/70 font-normal">(optional)</span></label>
+        <input id="supporter_name" name="supporter_name" type="text" class="input input-bordered w-full mt-2" placeholder="Preferred name or alias" value="{{ supporter_name_value }}">
+        <p class="mt-2 text-sm text-base-content/70">We'll use this to recognise you publicly unless you leave it blank.</p>
+      </div>
+
+      {% if show_updates_email %}
+        <div>
+          <label class="block font-medium" for="updates_email">Email for project updates <span class="text-base-content/70 font-normal">(optional)</span></label>
+          <input id="updates_email" name="updates_email" type="email" class="input input-bordered w-full mt-2" placeholder="updates@example.com" value="{{ updates_email_value }}">
+          <p class="mt-2 text-sm text-base-content/70">We'll send behind-the-scenes updates and invitations here if provided.</p>
+        </div>
+      {% endif %}
+
+      {% if not request.user.is_authenticated %}
+        <div>
+          <label class="block font-medium" for="email">Email address</label>
+          <input id="email" name="email" type="email" class="input input-bordered w-full mt-2" placeholder="you@example.com" value="{{ email_value }}" required>
+        </div>
+      {% endif %}
+
+      {% if error %}
+        <div class="alert alert-error">{{ error }}</div>
+      {% endif %}
+
+      <button type="submit" class="btn btn-primary btn-block">{{ tier.cta }}</button>
+    </form>
+  </div>
+  <p class="mt-6 text-sm text-base-content/60 text-center">
+    * USD amounts are approximate and based on an exchange rate of 1 {{ exchange_rate.target_currency }} ≈
+    {% if exchange_rate_inverse %}R{{ exchange_rate_inverse|floatformat:2 }}{% else %}{{ exchange_rate.rate|floatformat:4 }} {{ exchange_rate.source_currency }}{% endif %}
+    (South African Rand),
+    retrieved on {{ exchange_rate.fetched_at|date:"j F Y" }}.
+    <a href="{{ exchange_rate_url }}" target="_blank" rel="noopener noreferrer" class="link">Check the current USD/ZAR rate</a>.
+  </p>
+  {% if tier.amount_type == 'custom' %}
+    <script>
+      (function () {
+        var rate = Number('{{ exchange_rate.rate|floatformat:8 }}');
+        if (!Number.isFinite(rate) || rate <= 0) {
+          return;
+        }
+        var zarInput = document.getElementById('amount');
+        var usdInput = document.getElementById('amount_usd');
+        if (!zarInput || !usdInput) {
+          return;
+        }
+        var syncing = false;
+        var toFixed = function (value) {
+          if (!Number.isFinite(value) || value <= 0) {
+            return '';
+          }
+          return (Math.round(value * 100) / 100).toFixed(2);
+        };
+        var updateUsd = function () {
+          if (syncing) {
+            return;
+          }
+          syncing = true;
+          var zar = Number(zarInput.value);
+          usdInput.value = toFixed(zar * rate);
+          syncing = false;
+        };
+        var updateZar = function () {
+          if (syncing) {
+            return;
+          }
+          syncing = true;
+          var usd = Number(usdInput.value);
+          zarInput.value = toFixed(usd / rate);
+          syncing = false;
+        };
+
+        zarInput.addEventListener('input', updateUsd);
+        usdInput.addEventListener('input', updateZar);
+
+        if (zarInput.value && !usdInput.value) {
+          updateUsd();
+        } else if (!zarInput.value && usdInput.value) {
+          updateZar();
+        }
+      })();
+    </script>
+  {% endif %}
+</div>
+{% endblock %}

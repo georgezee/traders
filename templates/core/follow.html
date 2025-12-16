@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<section class="max-w-2xl mx-auto mt-10 p-6 bg-base-100 rounded-xl shadow">
+  <h1 class="text-3xl font-bold mb-6">We're just getting started!</h1>
+
+  <div class="mb-6 text-base-content/80">
+    <p class="mb-4">Traders is still in the works, and we'd love for you to be part of the journey.</p>
+    <p>Join our announcements list to get early updates, and a heads-up when account sign ups are live.</p>
+  </div>
+
+  {% crispy form %}
+
+</section>
+{% endblock %}

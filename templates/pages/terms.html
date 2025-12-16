@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="max-w-4xl mx-auto px-4 py-10">
+  <h1 class="text-3xl font-bold mb-6">Traders Terms and Conditions</h1>
+  <p class="mb-6 text-sm text-gray-500">Effective Date: <em>{{ effective_date|default:"[TBC]" }}</em></p>
+
+  <div class="space-y-8">
+
+    <div>
+      <h2 class="text-xl font-semibold">1. Who can use Traders</h2>
+      <p>
+        [TBC]
+      </p>
+    </div>
+
+    <div>
+      <h2 class="text-xl font-semibold">2. Content and licensing</h2>
+      <p>
+        The Traders platform code is open source under the
+        <a href="https://www.gnu.org/licenses/agpl-3.0.en.html" target="_blank" class="link link-primary">
+          GNU AGPL-3.0 license
+        </a>.
+      </p>
+      <ul class="list-disc list-inside">
+        <li>
+          <a href="https://github.com/georgezee/traders" class="link link-primary" target="_blank">Traders App</a>
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="text-xl font-semibold">3. Refunds</h2>
+      <p>
+        [TBC]
+      </p>
+    </div>
+
+    <div>
+      <h2 class="text-xl font-semibold">4. Account suspension</h2>
+      <p>
+        We reserve the right to suspend or terminate accounts involved in abuse, spamming, or harassment.
+      </p>
+    </div>
+
+    <div>
+      <h2 class="text-xl font-semibold">5. External tools and accuracy</h2>
+      <p>
+        Traders links to external service providers offering specific skills.
+        These services are run independently, and are governed by their own terms, which you are subject to when you use them.
+        We don’t guarantee their availability or functionality.
+      </p>
+    </div>
+
+    <div>
+      <h2 class="text-xl font-semibold">6. Governing law</h2>
+      <p>
+        Traders is operated from South Africa. Any disputes or legal matters will be handled under South African law.
+      </p>
+    </div>
+
+    <div>
+      <h2 class="text-xl font-semibold">7. Changes to these terms</h2>
+      <p>
+        Terms may change over time. We'll post updates at
+        <a href="https://example.com/terms" class="link link-primary">example.com/terms</a> and changes can be tracked on our public repositories.
+      </p>
+    </div>
+
+    <div>
+      <h2 class="text-xl font-semibold">8. Accuracy</h2>
+      <p>
+        We do not guarantee the accuracy or completeness of any of our content. We welcome feedback on our content and service.
+      </p>
+    </div>
+
+    <div>
+      <h2 class="text-xl font-semibold">9. Contact</h2>
+      <p>You can contact us at:</p>
+      <ul class="list-disc list-inside mt-2">
+        <li><strong>Support:</strong> <a href="mailto:support@example.com" class="link">support@example.com</a></li>
+        <li><strong>Compliance:</strong> <a href="mailto:compliance@example.com" class="link">compliance@example.com</a></li>
+      </ul>
+    </div>
+
+    <section class="text-sm text-gray-500">
+      <p>For more details on how we handle your data, please read our <a href="/privacy" class="link link-primary">Privacy policy</a>.</p>
+    </section>
+
+  </div>
+</section>
+{% endblock %}

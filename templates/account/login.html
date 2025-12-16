@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load i18n account socialaccount crispy_forms_tags %}
+{% url 'account_signup' as signup_url %}
+
+{% block content %}
+<style>
+  .allauth-login #hint_id_password { display: none; }
+</style>
+<div class="allauth-login mx-auto max-w-[600px] w-full px-4 py-6">
+  <h1 class="text-2xl font-bold mb-4">{% trans "Sign In" %}</h1>
+
+  {% get_providers as socialaccount_providers %}
+
+  <p class="text-sm text-base-content/70 mb-3">
+    {% blocktrans %}If you have not created an account yet, then please <a href="{{ signup_url }}" class="link link-primary underline">sign up</a> first.{% endblocktrans %}
+  </p>
+
+  {% if socialaccount_providers %}
+    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+    <div class="divider my-6">{% trans "Or continue with email" %}</div>
+  {% endif %}
+
+  <form class="space-y-4" method="post" action="{% url 'account_login' %}">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    {{ form.login|as_crispy_field }}
+    {{ form.password|as_crispy_field }}
+
+    {% if form.remember %}
+    <div class="form-control">
+      <label class="label cursor-pointer items-center gap-2" for="{{ form.remember.id_for_label }}">
+        {{ form.remember }}
+        <span class="label-text text-sm">{{ form.remember.label }}</span>
+      </label>
+      {{ form.remember.errors }}
+    </div>
+    {% endif %}
+
+    {% if redirect_field_value %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
+
+    <div class="flex items-center justify-between gap-4">
+      <button type="submit" class="btn btn-primary">{% trans "Sign In" %}</button>
+      <a class="link link-primary underline text-sm" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

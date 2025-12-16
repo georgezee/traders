@@ -1,0 +1,146 @@
+{% load crispy_forms_tags %}
+
+<div
+  class="relative bg-base-100 text-base-content rounded-xl shadow-lg w-full max-w-xl"
+  data-flag-modal-root="true"
+  data-flag-submission-success="{% if submission_success %}true{% else %}false{% endif %}"
+  data-flag-success-message="{{ success_message|default:'Thanks for flagging this step. We&#039;ll review it shortly.'|escape }}"
+  data-flag-auto-close="{{ auto_close_delay|default:3 }}"
+>
+  <button
+    type="button"
+    class="absolute top-3 right-3 p-2 rounded-full text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus-visible:ring focus-visible:ring-offset-2 focus-visible:ring-gray-400"
+    aria-label="Close report form"
+    onclick="window.dispatchEvent(new CustomEvent('close-modal'))"
+  >
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <div class="p-6 space-y-4">
+    <div>
+      <h2 class="text-xl font-semibold">Flag this step</h2>
+      {% if step_title %}
+        <p class="text-sm text-gray-600 mt-1">You're flagging: <strong>{{ step_title }}</strong></p>
+      {% endif %}
+      <p class="text-sm text-gray-600 mt-3">
+        Pick the reason that best matches the issue. We'll review every report to keep lessons accurate and safe.
+      </p>
+    </div>
+    <div
+      data-flag-status
+      class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm {% if submission_failed %}bg-error/10 text-error{% elif submission_success %}bg-success/10 text-success{% else %}bg-base-200 text-base-content/80{% endif %} {% if not submission_failed and not submission_success %}hidden{% endif %}"
+      role="status"
+      aria-live="polite"
+    >
+      <span
+        data-flag-status-spinner
+        class="{% if submission_failed or submission_success %}hidden{% else %}loading loading-spinner loading-sm text-primary{% endif %}"
+        aria-hidden="true"
+      ></span>
+      <span data-flag-status-text>
+        {% if submission_success %}
+          {{ success_message|default:"Thanks for flagging this step. We'll review it shortly." }}
+        {% elif submission_failed %}
+          We couldn't send your report. Please check the highlighted fields and try again.
+        {% else %}
+          Sending report...
+        {% endif %}
+      </span>
+    </div>
+    {% if form %}
+      {% crispy form %}
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  (function () {
+    const script = document.currentScript;
+    if (!script) {
+      return;
+    }
+    const root = script.previousElementSibling;
+    if (!root || root.dataset.flagModalRoot !== 'true') {
+      return;
+    }
+
+    const form = root.querySelector('#flag-content-form');
+    const status = root.querySelector('[data-flag-status]');
+    const spinner = status ? status.querySelector('[data-flag-status-spinner]') : null;
+    const text = status ? status.querySelector('[data-flag-status-text]') : null;
+    const submissionSuccess = root.dataset.flagSubmissionSuccess === 'true';
+    const successMessage = root.dataset.flagSuccessMessage || "Thanks for flagging this step. We'll review it shortly.";
+    const autoCloseDelay = parseInt(root.dataset.flagAutoClose || '3', 10);
+
+    if (!status || !text) {
+      return;
+    }
+
+    const resetStatusClasses = () => {
+      status.classList.remove('bg-error/10', 'text-error', 'bg-success/10', 'text-success');
+    };
+
+    const showStatus = (state, message) => {
+      status.classList.remove('hidden');
+      resetStatusClasses();
+      if (state === 'loading') {
+        if (spinner) {
+          spinner.classList.remove('hidden');
+          spinner.classList.add('loading', 'loading-spinner', 'loading-sm', 'text-primary');
+        }
+      } else {
+        if (spinner) {
+          spinner.classList.remove('loading', 'loading-spinner', 'loading-sm', 'text-primary');
+          spinner.classList.add('hidden');
+        }
+        if (state === 'error') {
+          status.classList.add('bg-error/10', 'text-error');
+        } else if (state === 'success') {
+          status.classList.add('bg-success/10', 'text-success');
+        }
+      }
+      text.textContent = message;
+    };
+
+    const showError = (message) => {
+      showStatus('error', message || 'We could not send your report. Please try again.');
+    };
+
+    if (form) {
+      form.addEventListener('htmx:beforeRequest', () => {
+        showStatus('loading', 'Sending report...');
+      });
+
+      form.addEventListener('htmx:sendError', () => {
+        showError('We could not reach the server. Please check your connection and try again.');
+      });
+
+      form.addEventListener('htmx:timeout', () => {
+        showError('The request timed out. Please try again.');
+      });
+
+      form.addEventListener('htmx:responseError', () => {
+        showError();
+      });
+
+      form.addEventListener('htmx:afterRequest', (event) => {
+        if (event.detail && event.detail.failed) {
+          showError();
+        }
+      });
+    }
+
+    const scheduleClose = (delay) => {
+      if (!Number.isFinite(delay) || delay <= 0) {
+        return;
+      }
+      window.setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('close-modal'));
+      }, delay * 1000);
+    };
+
+    if (submissionSuccess) {
+      showStatus('success', successMessage);
+      scheduleClose(autoCloseDelay);
+    }
+  })();
+</script>

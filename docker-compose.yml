@@ -1,0 +1,56 @@
+version: '3.9'
+
+services:
+  web:
+    build: .
+    container_name: traders-web
+    # For local debugging, switch the runserver command below.
+    # python -m debugpy --listen 0.0.0.0:5678 --wait-for-client manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+      # For debugging
+      # - "5678:5678"  # For debugpy
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    container_name: traders-redis
+    command: redis-server --save 60 1 --loglevel warning
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  celery:
+    build: .
+    container_name: traders-celery
+    command: celery -A config worker -l info
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - db
+
+volumes:
+  postgres_data:
+  redis_data:

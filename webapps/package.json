@@ -1,0 +1,44 @@
+{
+  "name": "traders-webapps",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev --host --port 5173",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "lint": "eslint . --ext .ts,.js,.svelte",
+    "format": "prettier --write .",
+    "build:css": "postcss traders-app/src/app.css -o traders-app/src/app.compiled.css",
+    "watch:css": "postcss traders-app/src/app.css -o traders-app/src/app.compiled.css --watch",
+    "watch:build": "vite build --watch"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^4.0.0",
+    "@tailwindcss/cli": "^4.1.10",
+    "@tailwindcss/postcss": "^4.1.7",
+    "@tailwindcss/typography": "^0.5.16",
+    "@tsconfig/svelte": "^5.0.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-svelte": "^2.0.0",
+    "postcss": "^8.5.3",
+    "postcss-cli": "^11.0.1",
+    "prettier": "^3.0.0",
+    "prettier-plugin-svelte": "^3.0.0",
+    "svelte": "^5.0.0",
+    "svelte-check": "^4.0.0",
+    "tslib": "^2.0.0",
+    "typescript": "^5.0.0",
+    "vite": "^5.0.0"
+  },
+  "dependencies": {
+    "daisyui": "^5.0.42",
+    "tailwindcss": "^4.1.7",
+    "zod": "^3.24.1"
+  }
+}

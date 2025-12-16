@@ -1,0 +1,428 @@
+{% load static %}
+{% load i18n %}
+{% load icon_tags %}
+{% load account socialaccount %}
+<!DOCTYPE html>
+<html lang="en" data-theme="light" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ page_meta.full_title|default:page_meta.title|default:"Traders" }}{% endblock %}</title>
+  {% block meta %}{% include "partials/meta_tags.html" %}{% endblock %}
+
+  <script>
+    // theme handling
+    (function () {
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme) {
+        document.documentElement.setAttribute("data-theme", savedTheme);
+      }
+
+      window.setTheme = function (theme) {
+        document.documentElement.setAttribute("data-theme", theme);
+        localStorage.setItem("theme", theme);
+      };
+    })();
+
+    // site banner handling
+    (function () {
+      const bannerDismissed = localStorage.getItem("siteBannerDismissed");
+
+      document.addEventListener("DOMContentLoaded", function() {
+        const banner = document.getElementById("site-banner");
+        if (banner && bannerDismissed !== "true") {
+          // Show banner with smooth animation - first make it visible, then animate
+          banner.style.display = "block";
+          setTimeout(() => {
+            banner.classList.remove("opacity-0", "translate-y-[-100%]");
+            banner.classList.add("opacity-100", "translate-y-0");
+          }, 50); // Small delay to ensure display change is processed
+        }
+        // If dismissed, banner stays hidden (display: none from HTML)
+      });
+
+      window.dismissSiteBanner = function () {
+        const banner = document.getElementById("site-banner");
+        if (banner) {
+          // Hide banner with smooth animation
+          banner.classList.remove("opacity-100", "translate-y-0");
+          banner.classList.add("opacity-0", "translate-y-[-100%]");
+          localStorage.setItem("siteBannerDismissed", "true");
+
+          // Completely hide after animation completes
+          setTimeout(() => {
+            banner.style.display = "none";
+          }, 500); // Match the transition duration
+        }
+      };
+    })();
+
+    // Emits a custom 'traders:navigation' event whenever SPA navigation occurs.
+    (function () {
+      const emitNavigation = url => {
+        window.dispatchEvent(new CustomEvent('traders:navigation', {
+          detail: { url: url || window.location.href }
+        }));
+      };
+
+      const originalPushState = history.pushState;
+      history.pushState = function (state, title, url) {
+        const result = originalPushState.apply(this, arguments);
+        emitNavigation(url);
+        return result;
+      };
+
+      const originalReplaceState = history.replaceState;
+      history.replaceState = function (state, title, url) {
+        const result = originalReplaceState.apply(this, arguments);
+        emitNavigation(url);
+        return result;
+      };
+    })();
+  </script>
+  <!-- <script>
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys getNextSurveyStep onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init('phc_GN1ZUvOWYqmzlwKlp0RzguJx5QpcujXEYIhi864d2ho',{api_host:'https://eu.i.posthog.com', defaults:'2025-05-24'})
+  </script> -->
+
+  <link href="{% static 'css/output.css' %}" rel="stylesheet">
+  <link href="{% static 'css/traders-icons.css' %}" rel="stylesheet">
+  <style>[x-cloak]{display:none !important;}</style>
+  <!-- Favicon / Touch icons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/traders-icon.png' %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/traders-icon.png' %}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/traders-icon.png' %}">
+  <meta name="theme-color" content="#ffffff">
+  <!-- htmx -->
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+  <!-- alpine -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+</head>
+<body class="min-h-screen bg-base-100 overflow-x-hidden">
+  <!-- Main Menu -->
+  <div class="navbar bg-base-100 shadow-md print:hidden">
+    <div class="navbar-start pl-10 lg:pl-12">
+      {% block hamburger_dropdown %}
+      <div class="fixed left-4 top-4 z-50 print:hidden">
+        <div class="dropdown">
+          <div tabindex="0" role="button" class="btn btn-square btn-ghost btn-sm mt-1">
+            {% icon "menu" "Open menu" "w-6 h-4" %}
+          </div>
+          <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 text-2xl">
+            <li class="menu-title"><span>Pages</span></li>
+            <li><a href="{% url 'home' %}" class="hover:text-primary text-lg">Home</a></li>
+            <li><a href="{% url 'about' %}" class="hover:text-primary text-lg">About</a></li>
+          </ul>
+        </div>
+      </div>
+      {% endblock %}
+      <a href="{% url 'home' %}" class="btn btn-ghost p-0">
+        <svg id="traders-logo" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 2000 1024" class="h-18 lg:h-20 w-auto">
+          <path class="logo-secondary" d="M505.6,285.1c-41,1.6-85.8,20.5-114.8,46.1-9.1,8-16.6,16.7-22,25.7-39.2,52-10.9,101.4-40.3,147.1-18.7,29-77.9,51.4-86,112.3-2.8,21.1,7.7,50.3,27.5,73.8,32.2,38.5,65.1,76.9,65.1,76.9,0,0,.4-12,2.4-20.5,27.2-118.4,126.8-89.1,154.4-200.6,19.4-78.2-94.8-177.4,13.8-260.8Z"/>
+          <path class="logo-primary" d="M430.5,205.2c-53.7,3.3-113.5,36.4-135.3,74.7-38.2,52.8-8.8,101.6-37.2,147.9-18.1,29.4-75.5,53.2-83.6,114.1-5.8,43.6,66.5,111.7,95.7,148.8,0,0,0-.2,0-.5,0-2.3.4-12.5,1.9-20.1,24.8-118.9,124.9-91.7,150.2-203.7,9.3-41.4-18.5-87.8-31.3-135-11.5-42.4-10.9-85.4,39.7-126Z"/>
+        </svg>
+      </a>
+    </div>
+
+    <div class="navbar-center hidden lg:flex">
+      <ul class="menu menu-horizontal text-lg px-1 items-center gap-3">
+        <li><a href="{% url 'about' %}" class="hover:text-primary">About</a></li>
+      </ul>
+    </div>
+
+    <div class="navbar-end flex items-center gap-4">
+
+      <div class="dropdown dropdown-end">
+        <button tabindex="0" role="button" class="btn btn-ghost btn-sm px-1">
+          {% icon "brush" "Change theme" "w-6 h-4" %}
+        </button>
+        <ul tabindex="0" class="menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 space-y-1">
+          <li><a onclick="setTheme('light')" class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-yellow-300"></span> Light</a></li>
+          <li><a onclick="setTheme('dark')" class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-gray-800"></span> Dark</a></li>
+          <li><a onclick="setTheme('sage')" class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-lime-300"></span> Sage</a></li>
+          <li><a onclick="setTheme('cosmic')" class="flex items-center gap-2"><span class="w-3 h-3 rounded-full" style="background-color: #4F5DD3"></span> Cosmic</a></li>
+          <li><a onclick="setTheme('lagoon')" class="flex items-center gap-2"><span class="w-3 h-3 rounded-full" style="background-color: #5092E4"></span> Lagoon</a></li>
+          <li><a onclick="setTheme('rosebush')" class="flex items-center gap-2"><span class="w-3 h-3 rounded-full" style="background-color: #FF6475"></span> Rosebush</a></li>
+          <li><a onclick="setTheme('beach')" class="flex items-center gap-2"><span class="w-3 h-3 rounded-full" style="background-color: #5BD8EA"></span> Beach</a></li>
+          <li><a onclick="setTheme('mars')" class="flex items-center gap-2"><span class="w-3 h-3 rounded-full" style="background-color: #EF6D5B"></span> Mars</a></li>
+          <li><a onclick="setTheme('aquamarine')" class="flex items-center gap-2"><span class="w-3 h-3 rounded-full" style="background-color: #00BB09"></span> Aquamarine</a></li>
+          <li><a onclick="setTheme('blue2purple')" class="flex items-center gap-2"><span class="w-3 h-3 rounded-full" style="background-color: #1383FC"></span> Blue2Purple</a></li>
+        </ul>
+      </div>
+
+      {% if user.is_authenticated %}
+        <div class="dropdown dropdown-end">
+          <button tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+            <div class="w-10 rounded-full">
+              {% if user.socialaccount_set.all.0.get_avatar_url %}
+                <img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" alt="{{ user.username }}" />
+              {% else %}
+                <div class="bg-primary text-primary-content flex items-center justify-center h-full">
+                  {{ user.username|make_list|first|upper }}
+                </div>
+              {% endif %}
+            </div>
+          </button>
+          <ul tabindex="0" class="menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4">
+            <li><a href="{% url 'account_email' %}">{% trans "Change Email" %}</a></li>
+            <li><a href="{% url 'account_logout' %}">{% trans "Sign Out" %}</a></li>
+          </ul>
+        </div>
+      {% else %}
+        {% url 'account_login' as login_base %}
+        {% with request.get_full_path|urlencode as next_path %}
+          <a href="{{ login_base }}?next={{ next_path }}" class="btn btn-primary btn-outline btn-md">{% trans "Login" %}</a>
+        {% endwith %}
+      {% endif %}
+    </div>
+  </div>
+
+{% block messages %}
+  <!-- Show any user notifications / alerts -->
+  <div x-data="alertHandler()" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-md px-4 space-y-3">
+    <template x-if="message">
+      <div x-show="visible" x-transition class="alert alert-soft font-bold shadow-lg"
+        :class="{
+          'alert-success': type === 'success',
+          'alert-info': type === 'info',
+          'alert-error': type === 'error'
+        }"
+      >
+        <span x-text="message"></span>
+        <button @click="visible = false" class="btn btn-sm btn-ghost ml-auto">✕</button>
+      </div>
+    </template>
+
+    {% if messages %}
+      {% for message in messages %}
+        {% with message.level_tag|default:'info' as tag %}
+          <div x-data="{ visible: true }" x-show="visible" x-transition class="alert alert-soft font-bold shadow-lg alert-{{ tag }}">
+            <span>{{ message|safe }}</span>
+            <button @click="visible = false" class="btn btn-sm btn-ghost ml-auto">✕</button>
+          </div>
+        {% endwith %}
+      {% endfor %}
+    {% endif %}
+  </div>
+{% endblock %}
+
+  <!-- Page Content -->
+  <main id="content-main" class="container mx-auto px-4 py-8 max-w-[1200px]">
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  <footer class="bg-base-200 text-base-content px-6 py-10 border-t border-base-300 print:hidden">
+    <div class="grid md:grid-cols-3 gap-8 max-w-[1200px] mx-auto">
+
+
+      <!-- Left: Tagline -->
+      <div>
+        <h6 class="footer-title">Traders is ...</h6>
+        <p class="text-m leading-relaxed">
+          Enabling micro-businesses, one bit at a time.<br>
+          Made with <span class="text-error">♥</span> in South Africa 🇿🇦 by Springfisher.
+        </p>
+      </div>
+
+      <!-- Center: Navigation Links -->
+      <div>
+        <h6 class="footer-title">Navigation</h6>
+          <a class="link link-primary no-underline" href="{% url 'about' %}">About</a><br>
+          <a class="link link-primary no-underline" href="{% url 'contact' %}">Contact us</a><br>
+        <a class="link link-primary no-underline" href="{% url 'faq' %}">FAQ</a><br>
+        <a class="link link-primary no-underline" href="{% url 'privacy' %}">Privacy policy</a><br>
+        <a class="link link-primary no-underline" href="{% url 'terms' %}">Terms and conditions</a><br>
+
+        <a class="link link-primary" href="https://github.com/georgezee/traders" target="_blank">♥ Open source</a>
+      </div>
+
+      <!-- Right: Language Selector -->
+      <div>
+        <h6 class="footer-title">Language</h6>
+        <select class="select select-sm select-bordered w-40 mt-2" onchange="location.href=this.value">
+          <option value="#" selected>English</option>
+          <option value="#">More coming ...</option>
+        </select>
+      </div>
+
+    </div>
+    <!-- Spacer to ensure last nodes aren't covered by progress panel -->
+    <div class="bottom-spacer" style="height:90px;">&nbsp;</div>
+  </footer>
+
+  <!-- Modal wrapper -->
+  <div id="modal-backdrop" class="fixed inset-0 z-[10050] flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div id="modal" class="w-full max-w-2xl p-4"></div>
+  </div>
+
+  {% block scripts_end %}
+  <script>
+    // Handle any login alerts based on querystring parameters.
+    function alertHandler() {
+      return {
+        message: null,
+        type: 'info',
+        visible: false,
+        show(msg, type = 'info') {
+          this.message = msg;
+          this.type = type;
+          this.visible = true;
+          setTimeout(() => this.visible = false, 5000);
+        }
+      }
+    }
+  </script>
+  <script>
+    // Turnstile form protection.
+    (function () {
+      const SCRIPT_SRC = "https://challenges.cloudflare.com/turnstile/v0/api.js?onload=tradersOnTurnstileLoad&render=explicit";
+
+      function findProtectedForms(root) {
+        const scope = root || document;
+        return Array.from(scope.querySelectorAll('form[data-requires-turnstile]'));
+      }
+
+      function ensureTurnstileScript() {
+        if (window.tradersTurnstileLoading) {
+          return;
+        }
+        window.tradersTurnstileLoading = true;
+        const script = document.createElement('script');
+        script.src = SCRIPT_SRC;
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+      }
+
+      function bindForm(form) {
+        if (!window.turnstile || form.dataset.turnstileBound === 'true') {
+          return;
+        }
+
+        const siteKey = form.dataset.turnstileSitekey;
+        if (!siteKey) {
+          return;
+        }
+
+        const tokenField = form.querySelector('input[name="turnstile_token"]');
+
+        let placeholder = form.querySelector('[data-turnstile-widget]');
+        if (!placeholder) {
+          placeholder = document.createElement('div');
+          placeholder.setAttribute('data-turnstile-widget', 'true');
+          placeholder.className = 'turnstile-widget mt-4 mb-4';
+          const submitControl = form.querySelector('button[type="submit"], input[type="submit"]');
+          if (submitControl && submitControl.parentNode) {
+            submitControl.parentNode.insertBefore(placeholder, submitControl);
+          } else {
+            form.appendChild(placeholder);
+          }
+        }
+
+        const mode = (form.dataset.turnstileMode || 'managed').toLowerCase();
+        let submitting = false;
+        const renderOptions = {
+          sitekey: siteKey,
+          callback(token) {
+            if (tokenField) {
+              tokenField.value = token;
+            }
+            if (mode === 'execute') {
+              submitting = true;
+              form.submit();
+            }
+          },
+          'error-callback'() {
+            if (tokenField) {
+              tokenField.value = '';
+            }
+          },
+          'expired-callback'() {
+            if (tokenField) {
+              tokenField.value = '';
+            }
+          },
+        };
+
+        if (mode === 'execute') {
+          renderOptions.size = 'invisible';
+          renderOptions.execution = 'execute';
+        } else {
+          const turnstileSize = form.dataset.turnstileSize;
+          if (turnstileSize) {
+            renderOptions.size = turnstileSize;
+          }
+        }
+
+        const widgetId = window.turnstile.render(placeholder, renderOptions);
+
+        if (mode === 'execute') {
+          if (!tokenField) {
+            return;
+          }
+          form.addEventListener('submit', (event) => {
+            if (submitting) {
+              submitting = false;
+              return;
+            }
+
+            if (!tokenField || !tokenField.value) {
+              event.preventDefault();
+              if (tokenField) {
+                tokenField.value = '';
+              }
+              window.turnstile.execute(widgetId);
+            }
+          });
+        }
+
+        form.dataset.turnstileBound = 'true';
+      }
+
+      function initForms(root) {
+        if (!window.turnstile) {
+          return;
+        }
+        findProtectedForms(root).forEach(bindForm);
+      }
+
+      window.tradersOnTurnstileLoad = function () {
+        window.tradersTurnstileReady = true;
+        initForms(document);
+      };
+
+      function maybeSetup(root) {
+        const forms = findProtectedForms(root);
+        if (!forms.length) {
+          return;
+        }
+        ensureTurnstileScript();
+        if (window.tradersTurnstileReady) {
+          initForms(root);
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        maybeSetup(document);
+      });
+
+      document.addEventListener('htmx:afterSwap', (event) => {
+        maybeSetup(event.target || document);
+      });
+    })();
+  </script>
+  <script>
+      !function(t,e){var o,n,p,r;e.__SV||(window.posthog && window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init Ce js Ls Te Fs Ds capture Ye calculateEventProperties zs register register_once register_for_session unregister unregister_for_session Ws getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey displaySurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty Bs Us createPersonProfile Hs Ms Gs opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing get_explicit_consent_status is_capturing clear_opt_in_out_capturing Ns debug L qs getPageViewId captureTraceFeedback captureTraceMetric".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+      posthog.init('phc_GN1ZUvOWYqmzlwKlp0RzguJx5QpcujXEYIhi864d2ho', {
+          cookieless_mode: 'always',
+          api_host: 'https://eu.i.posthog.com',
+          defaults: '2025-05-24',
+          person_profiles: 'always', // 'identified_only' or 'always' to create profiles for anonymous users as well
+      })
+  </script>
+  {% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% load icon_tags %}
+
+{% block content %}
+<section class="py-12 px-4 md:px-20 max-w-7xl mx-auto">
+  <h1 class="text-4xl font-bold mb-10 text-primary">Frequently Asked Questions</h1>
+
+  <!-- Section navigation (always on top) -->
+  <nav class="mb-12">
+    <div class="flex flex-col md:flex-row gap-4 text-base-content font-medium">
+      <a href="#project" class="btn btn-sm btn-outline md:btn-md flex items-center gap-2">
+        {% icon "lightbulb" "Lightbulb icon" "w-6 h-4" %}
+        The Project
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <div class="space-y-20">
+
+    <!-- Project Section -->
+    <div id="project">
+      <h2 class="text-2xl font-semibold text-secondary mb-6 flex items-center gap-3">
+        {% icon "lightbulb" "Lightbulb icon" "w-9 h-8" %}
+        The Project
+      </h2>
+      <div class="space-y-6 ml-4 md:ml-8">
+        <div>
+          <h3 class="font-bold">What is Traders?</h3>
+          ...
+        </div>
+        <div>
+          <h3 class="font-bold">How does Traders work?</h3>
+        </div>
+        <div>
+          <h3 class="font-bold">Who is Traders for?</h3>
+          ...
+        </div>
+        <div>
+          <h3 class="font-bold">How do I contact the Traders team?</h3>
+          <p>Email us at <a href="mailto:hello@example.com" class="link-primary">hello@example.com</a>, or use our <a href="/contact" class="link-primary">contact form</a>. We welcome all questions and feedback.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="content">
+      <div class="space-y-6 ml-4 md:ml-8">
+        <p>
+          For information about how your data is processed and the rules of our website, visit our
+          <a href="/privacy" class="link link-primary">Privacy Policy</a> and
+          <a href="/terms" class="link link-primary">Terms and Conditions</a> pages.
+        </p>
+      </div>
+    </div>
+
+
+  </div>
+</section>
+{% endblock %}

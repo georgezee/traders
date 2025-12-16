@@ -1,0 +1,82 @@
+<div
+  class="relative bg-base-100 text-base-content rounded-xl shadow-lg w-full max-w-sm p-8 text-center space-y-4"
+  x-data="modalSuccessComponent({
+    message: '{{ message|default:"Message sent!"|escapejs }}',
+    type: '{{ message_type|default:"success"|escapejs }}'
+  })"
+  x-init="init()"
+  role="status"
+  aria-live="polite"
+>
+  <div
+    class="mx-auto flex h-12 w-12 items-center justify-center rounded-full"
+    :class="type === 'success' ? 'bg-success/10 text-success' : 'bg-info/10 text-info'"
+  >
+    <svg
+      x-show="type === 'success'"
+      class="h-6 w-6"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+    </svg>
+    <svg
+      x-show="type !== 'success'"
+      class="h-6 w-6"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    </svg>
+  </div>
+  <p class="text-lg font-semibold" x-text="message"></p>
+  <p class="text-sm text-base-content/60" x-show="countdown > 0">
+    Closing in <span x-text="countdown"></span>s...
+  </p>
+</div>
+
+<script>
+  function modalSuccessComponent(config) {
+    return {
+      message: config.message,
+      type: config.type || 'success',
+      countdown: 3,
+      _timer: null,
+      init() {
+        this.$dispatch('show-alert', { text: this.message, type: this.type });
+        this.startCountdown();
+      },
+      startCountdown() {
+        const closeModal = () => {
+          this.$dispatch('close-modal');
+        };
+        let remaining = this.countdown;
+        this._timer = window.setInterval(() => {
+          remaining -= 1;
+          if (remaining <= 0) {
+            this.countdown = 0;
+            window.clearInterval(this._timer);
+            this._timer = null;
+            closeModal();
+          } else {
+            this.countdown = remaining;
+          }
+        }, 1000);
+        window.setTimeout(() => {
+          if (this._timer) {
+            window.clearInterval(this._timer);
+            this._timer = null;
+          }
+          this.countdown = 0;
+          closeModal();
+        }, this.countdown * 1000);
+      }
+    };
+  }
+</script>

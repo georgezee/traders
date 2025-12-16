@@ -1,0 +1,9 @@
+{
+  "__comment": "Used by Dokku to run deploy-time tasks. See https://dokku.com/docs/advanced-usage/deployment-tasks/",
+  "scripts": {
+    "dokku": {
+      "predeploy": "bash .deploy/notify_slack.sh start",
+      "postdeploy": "bash .deploy/notify_slack.sh complete"
+    }
+  }
+}

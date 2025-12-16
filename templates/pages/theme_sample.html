@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 py-16 space-y-12">
+
+  <!-- Hero -->
+  <div class="hero min-h-[30vh] bg-base-100 text-neutral">
+    <div class="hero-content text-center">
+      <div class="max-w-md">
+        <h1 class="text-5xl font-bold">DaisyUI Showcase</h1>
+        <p class="py-6">Explore commonly used components with theme-aware styling.</p>
+        <button class="btn btn-accent">Get Started</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Divider -->
+  <div class="divider">Statistics</div>
+
+  <!-- Stats -->
+  <div class="stats shadow w-full bg-base-100 text-neutral grid-cols-1 sm:grid-cols-3">
+    <div class="stat">
+      <div class="stat-title">Users</div>
+      <div class="stat-value text-primary">31K</div>
+      <div class="stat-desc">↗︎ 10% this month</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Downloads</div>
+      <div class="stat-value text-secondary">4,200</div>
+      <div class="stat-desc">↘︎ 5% from last week</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">New Signups</div>
+      <div class="stat-value text-accent">1,200</div>
+      <div class="stat-desc">↗︎ 15% this week</div>
+    </div>
+  </div>
+
+  <!-- Divider -->
+  <div class="divider">Tabs and Cards</div>
+
+  <!-- Tabs + Cards -->
+  <div>
+    <div role="tablist" class="tabs tabs-boxed mb-6 bg-base-100">
+      <a role="tab" class="tab tab-active">Overview</a>
+      <a role="tab" class="tab">Reports</a>
+      <a role="tab" class="tab">Settings</a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="card bg-secondary text-white shadow-md">
+        <div class="card-body">
+          <h2 class="card-title">Feature A</h2>
+          <p>This card uses <code>bg-secondary</code>.</p>
+        </div>
+      </div>
+      <div class="card bg-accent text-neutral shadow-md">
+        <div class="card-body">
+          <h2 class="card-title">Feature B</h2>
+          <p>Styled with <code>bg-accent</code>.</p>
+        </div>
+      </div>
+      <div class="card bg-primary text-base-100 shadow-md">
+        <div class="card-body">
+          <h2 class="card-title">Feature C</h2>
+          <p>Uses <code>bg-primary</code>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Divider -->
+  <div class="divider">Timeline</div>
+
+  <!-- Timeline via Steps -->
+  <ul class="steps steps-vertical lg:steps-horizontal w-full">
+    <li class="step step-primary">Start</li>
+    <li class="step step-secondary">Upload</li>
+    <li class="step step-accent">Verify</li>
+    <li class="step step-success">Complete</li>
+  </ul>
+
+  <!-- Divider -->
+  <div class="divider">List (Menu)</div>
+
+  <!-- Tooltip + Badge -->
+  <div class="flex gap-4 items-center">
+    <div class="tooltip tooltip-bottom" data-tip="Copy to clipboard">
+      <button class="btn btn-sm btn-neutral">Hover me</button>
+    </div>
+    <div class="badge badge-primary">Primary</div>
+    <div class="badge badge-secondary">Secondary</div>
+    <div class="badge badge-accent">Accent</div>
+  </div>
+
+  <!-- Divider -->
+  <div class="divider">Alerts</div>
+
+  <!-- Alerts -->
+  <div class="space-y-3">
+    <div class="alert alert-info"><span>This is an info alert.</span></div>
+    <div class="alert alert-success"><span>Success! Your form was submitted.</span></div>
+    <div class="alert alert-warning"><span>Warning! Check your input.</span></div>
+    <div class="alert alert-error"><span>Error! Something went wrong.</span></div>
+    <div class="alert alert-soft alert-info"><span>This is a soft info alert.</span></div>
+    <div class="alert alert-soft alert-success"><span>Success! Your form was submitted. (soft)</span></div>
+    <div class="alert alert-soft alert-warning"><span>Warning! Check your input. (soft)</span></div>
+    <div class="alert alert-soft alert-error"><span>Error! Something went wrong. (soft)</span></div>
+  </div>
+
+</div>
+{% endblock %}

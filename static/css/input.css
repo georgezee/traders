@@ -1,0 +1,282 @@
+@import "tailwindcss";
+
+/* Exclude the Svelte webapps so they don’t get merged here */
+@source not "../webapps";
+@source not "../webapps/**";
+
+/* Enable plugins */
+@plugin "@tailwindcss/typography";
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark;
+}
+
+@plugin "daisyui/theme" {
+  name: "light";
+  --color-primary: #60A5FA;
+  --color-secondary: #1E3A8A;
+  --color-accent: #FFD670;
+  --color-neutral: #111827;
+  --color-base-100: #FFFEFA;
+  --color-info: #38BDF8;
+  --color-success: #34D399;
+  --color-warning: #FBBF24;
+  --color-error: #F87171;
+}
+
+/* Custom themes */
+@plugin "daisyui/theme" {
+  name: "sage";
+  --color-primary: #A4CBB1;     /* muted green */
+  --color-primary-content: #1E293B; /* dark text on primary background */
+  --color-secondary: #A8C286;   /* pale sage */
+  --color-secondary-content: #1E293B; /* dark text on secondary background */
+  --color-accent: #658E4B;      /* strong herbal green */
+  --color-accent-content: #FFFFFF; /* light text on accent background */
+  --color-neutral: #3E432E;     /* deep olive-gray */
+  --color-neutral-content: #FFFFFF; /* light text on neutral background */
+  --color-base-100: #F5F5F0;    /* soft off-white */
+  --color-base-content: #1E293B; /* dark text for readability */
+  --color-info: #2F8F9D;        /* muted teal */
+  --color-info-content: #FFFFFF; /* light text on info background */
+  --color-success: #A8D5BA;     /* pastel mint */
+  --color-success-content: #1E293B; /* dark text on success background */
+  --color-warning: #F2C94C;     /* warm yellow */
+  --color-warning-content: #1E293B; /* dark text on warning background */
+  --color-error: #D7263D;       /* muted red */
+  --color-error-content: #FFFFFF; /* light text on error background */
+}
+
+@plugin "daisyui/theme" {
+  name: "cosmic";
+  --color-primary: #4F5DD3;
+  --color-primary-content: #FFFFFF;
+  --color-secondary: #A04DC2;
+  --color-secondary-content: #FFFFFF;
+  --color-accent: #561091;
+  --color-accent-content: #FFFFFF;
+  --color-neutral: #1E293B;
+  --color-neutral-content: #FFFFFF;
+  --color-base-100: #FFECF8;
+  --color-base-content: #1E293B;
+  --color-info: #3B82F6;
+  --color-info-content: #FFFFFF;
+  --color-success: #22C55E;
+  --color-success-content: #FFFFFF;
+  --color-warning: #FACC15;
+  --color-warning-content: #1E293B;
+  --color-error: #EF4444;
+  --color-error-content: #FFFFFF;
+}
+
+@plugin "daisyui/theme" {
+  name: "lagoon";
+  --color-primary: #5092E4;
+  --color-primary-content: #FFFFFF; /* light text on primary background */
+  --color-secondary: #1ED3AF;
+  --color-secondary-content: #1E293B; /* dark text on secondary background */
+  --color-accent: #92F0F0;
+  --color-accent-content: #1E293B; /* dark text on light accent background */
+  --color-neutral: #1E293B;
+  --color-neutral-content: #FFFFFF; /* light text on dark neutral background */
+  --color-base-100: #E4FDFF;
+  --color-base-content: #1E293B; /* dark text on light base background */
+  --color-info: #3B82F6;
+  --color-info-content: #FFFFFF; /* light text on info background */
+  --color-success: #22C55E;
+  --color-success-content: #FFFFFF; /* light text on success background */
+  --color-warning: #FACC15;
+  --color-warning-content: #1E293B; /* dark text on warning background */
+  --color-error: #EF4444;
+  --color-error-content: #FFFFFF; /* light text on error background */
+}
+
+@plugin "daisyui/theme" {
+  name: "rosebush";
+  --color-primary: #F08AA2;
+  --color-primary-content: #1E293B; /* dark text on primary background */
+  --color-secondary: #B162D3;
+  --color-secondary-content: #1E293B; /* dark text on secondary background */
+  --color-accent: #FFFFFF;
+  --color-accent-content: #1E293B; /* dark text on white accent background */
+  --color-neutral: #1E293B;
+  --color-neutral-content: #FFFFFF; /* light text on dark neutral background */
+  --color-base-100: #FFEAF8;
+  --color-base-content: #1E293B; /* dark text on light base background */
+  --color-info: #3B82F6;
+  --color-info-content: #FFFFFF; /* light text on info background */
+  --color-success: #22C55E;
+  --color-success-content: #FFFFFF; /* light text on success background */
+  --color-warning: #FACC15;
+  --color-warning-content: #1E293B; /* dark text on warning background */
+  --color-error: #EF4444;
+  --color-error-content: #FFFFFF; /* light text on error background */
+}
+
+@plugin "daisyui/theme" {
+  name: "beach";
+  --color-primary: #5BD8EA;
+  --color-primary-content: #1E293B; /* dark text on primary background */
+  --color-secondary: #F5B8D0;
+  --color-secondary-content: #1E293B; /* dark text on secondary background */
+  --color-accent: #FFE45A;
+  --color-accent-content: #1E293B; /* dark text on accent background */
+  --color-neutral: #1E293B;
+  --color-neutral-content: #FFFFFF; /* light text on dark neutral background */
+  --color-base-100: #FFFBEC;
+  --color-base-200: #FFFFFF;
+  --color-base-content: #1E293B; /* dark text on light base background */
+  --color-info: #3B82F6;
+  --color-info-content: #FFFFFF; /* light text on info background */
+  --color-success: #22C55E;
+  --color-success-content: #FFFFFF; /* light text on success background */
+  --color-warning: #FACC15;
+  --color-warning-content: #1E293B; /* dark text on warning background */
+  --color-error: #EF4444;
+  --color-error-content: #FFFFFF; /* light text on error background */
+}
+
+@plugin "daisyui/theme" {
+  name: "mars";
+  --color-primary: #EF7967;
+  --color-primary-content: #FFFFFF; /* white text on primary background */
+  --color-secondary: #F2A769;
+  --color-secondary-content: #FFFFFF; /* white text on secondary background */
+  --color-accent: #833936;
+  --color-accent-content: #FFFFFF; /* light text on dark accent background */
+  --color-neutral: #1E293B;
+  --color-neutral-content: #FFFFFF; /* light text on dark neutral background */
+  --color-base-100: #FCEFE6;
+  --color-base-content: #1E293B; /* dark text on light base background */
+  --color-info: #3B82F6;
+  --color-info-content: #FFFFFF; /* light text on info background */
+  --color-success: #22C55E;
+  --color-success-content: #FFFFFF; /* light text on success background */
+  --color-warning: #FACC15;
+  --color-warning-content: #1E293B; /* dark text on warning background */
+  --color-error: #EF4444;
+  --color-error-content: #FFFFFF; /* light text on error background */
+}
+
+@plugin "daisyui/theme" {
+  name: "aquamarine";
+  --color-primary: #00BB09;
+  --color-primary-content: #FFFFFF; /* light text on dark primary background */
+  --color-secondary: #01FF6F;
+  --color-secondary-content: #1E293B; /* dark text on bright secondary background */
+  --color-accent: #00FFAE;
+  --color-accent-content: #1E293B; /* dark text on bright accent background */
+  --color-neutral: #1E293B;
+  --color-neutral-content: #FFFFFF; /* light text on dark neutral background */
+  --color-base-100: #FFFFFF;
+  --color-base-content: #1E293B; /* dark text on white base background */
+  --color-info: #3B82F6;
+  --color-info-content: #FFFFFF; /* light text on info background */
+  --color-success: #22C55E;
+  --color-success-content: #FFFFFF; /* light text on success background */
+  --color-warning: #FACC15;
+  --color-warning-content: #1E293B; /* dark text on warning background */
+  --color-error: #EF4444;
+  --color-error-content: #FFFFFF; /* light text on error background */
+}
+
+@plugin "daisyui/theme" {
+  name: "blue2purple";
+  --color-primary: #7700FF;
+  --color-primary-content: #FFFFFF; /* light text on dark primary background */
+  --color-secondary: #1383FC;
+  --color-secondary-content: #FFFFFF; /* light text on secondary background */
+  --color-accent: #33FFFF;
+  --color-accent-content: #1E293B; /* dark text on bright accent background */
+  --color-neutral: #1E293B;
+  --color-neutral-content: #FFFFFF; /* light text on dark neutral background */
+  --color-base-100: #FFFFFF;
+  --color-base-content: #1E293B; /* dark text on white base background */
+  --color-info: #3B82F6;
+  --color-info-content: #FFFFFF; /* light text on info background */
+  --color-success: #22C55E;
+  --color-success-content: #FFFFFF; /* light text on success background */
+  --color-warning: #FACC15;
+  --color-warning-content: #1E293B; /* dark text on warning background */
+  --color-error: #EF4444;
+  --color-error-content: #FFFFFF; /* light text on error background */
+}
+
+/* Logo styles (that adapt to current theme). */
+.logo-primary {
+  fill: var(--color-accent);
+  opacity: 0.80;
+}
+.logo-secondary {
+  fill: var(--color-primary);
+}
+.logo-text {
+  fill: var(--color-base-content);
+}
+
+@media (max-width: 479px) {
+  .navbar-start .logo-text {
+    display: none;
+  }
+}
+
+/* SVG icons are black but can be adjusted here. */
+.icon-light {
+  filter: invert(0.9);
+}
+
+/* Set global print rules. */
+@media print {
+  .prose,
+  .prose * {
+    color: black !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    opacity: 1 !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}
+
+.print-section {
+  page-break-inside: avoid;
+}
+
+/* Style nested list elements */
+@layer utilities {
+  .prose ul ul {
+    list-style-type: circle; /* second level */
+    margin-left: 1.5rem;
+    color: theme('colors.gray.600');
+  }
+
+  .prose ul ul ul {
+    list-style-type: square; /* third level */
+    margin-left: 2rem;
+    color: theme('colors.gray.500');
+  }
+}
+
+/* Hide elements until evaluated. */
+[x-cloak] { display: none !important; }
+
+/* Form field styling */
+@layer components {
+  textarea,
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="url"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="search"] {
+    @apply border border-base-300 rounded-md px-3 py-2 w-full;
+  }
+
+  textarea {
+    @apply resize-y min-h-[80px];
+  }
+
+}

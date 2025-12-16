@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Server Error · Traders{% endblock %}
+
+{% block content %}
+<section class="hero min-h-[40vh] bg-base-100 text-base-content">
+  <div class="hero-content text-center">
+    <div class="max-w-xl">
+      <p class="text-sm uppercase tracking-wide text-error font-semibold">Error</p>
+      <h1 class="text-5xl font-bold">Something went wrong</h1>
+      <p class="mt-6 text-lg text-base-content/70">We hit an unexpected snag while loading this page.</p>
+      <p class="mt-4 text-base text-base-content/70">Our team has been notified. Try again in a moment or use one of the links below to continue exploring.</p>
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+        <a href="{% url 'home' %}" class="btn btn-primary">Return home</a>
+        <a href="{% url 'contact' %}" class="btn btn-outline">Report this issue</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
