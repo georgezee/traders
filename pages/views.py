@@ -126,8 +126,8 @@ def about(request):
 
 @require_http_methods(["GET", "POST"])
 def cr33(request):
-    title = "CR33"
-    description = "Placeholder page for the CR33 route."
+    title = "Traders - Knife sharpening"
+    description = "Book your service slot."
     canonical_path = "/cr33"
     canonical_url = request.build_absolute_uri(canonical_path)
     metadata = PageMeta(
