@@ -31,13 +31,26 @@
             <p class="opacity-80">Knife sharpening</p>
 
             <div class="mt-2 flex items-center gap-2">
-              <div class="rating rating-sm">
-                <input type="radio" class="mask mask-star-2 bg-orange-400" checked />
-                <input type="radio" class="mask mask-star-2 bg-orange-400" checked />
-                <input type="radio" class="mask mask-star-2 bg-orange-400" checked />
-                <input type="radio" class="mask mask-star-2 bg-orange-400" checked />
-                <input type="radio" class="mask mask-star-2 bg-orange-400" />
+              <div class="rating rating-sm rating-half">
+                <input type="radio" class="rating-hidden" />
+
+                <input type="radio" class="mask mask-star-2 mask-half-1 bg-orange-400" />
+                <input type="radio" class="mask mask-star-2 mask-half-2 bg-orange-400" />
+
+                <input type="radio" class="mask mask-star-2 mask-half-1 bg-orange-400" />
+                <input type="radio" class="mask mask-star-2 mask-half-2 bg-orange-400" />
+
+                <input type="radio" class="mask mask-star-2 mask-half-1 bg-orange-400" />
+                <input type="radio" class="mask mask-star-2 mask-half-2 bg-orange-400" />
+
+                <input type="radio" class="mask mask-star-2 mask-half-1 bg-orange-400" />
+                <input type="radio" class="mask mask-star-2 mask-half-2 bg-orange-400" />
+
+                <!-- 4.5 stars -->
+                <input type="radio" class="mask mask-star-2 mask-half-1 bg-orange-400" checked />
+                <input type="radio" class="mask mask-star-2 mask-half-2 bg-orange-400" />
               </div>
+
               <span class="font-semibold">4.7</span>
               <span class="opacity-70">(6 reviews)</span>
             </div>
@@ -203,30 +216,30 @@
         <div class="mt-8 card bg-accent text-accent-content shadow-xl">
           <div class="card-body py-6">
             <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div class="text-center sm:text-left">
+              <div class="text-center grow place-items-center">
                 <div class="text-4xl md:text-5xl font-bold">R50</div>
-                <div class="text-lg opacity-90">for one</div>
+                <div class="text-lg opacity-90">for one knife</div>
               </div>
 
               <div class="divider sm:divider-horizontal m-0 w-full sm:w-auto">or</div>
 
-              <div class="text-center sm:text-right">
+              <div class="text-center grow place-items-center">
                 <div class="text-4xl md:text-5xl font-bold">R150</div>
-                <div class="text-lg opacity-90">for all</div>
+                <div class="text-lg opacity-90">for all knives</div>
               </div>
             </div>
 
-            <div class="mt-4 text-sm opacity-90 text-center">
-              Pay cash or online
+            <div class="mt-4 text-lg opacity-90 text-center">
+              <strong>Cash or pay online</strong>
             </div>
           </div>
         </div>
 
-        <div class="mt-8 card bg-base-100 text-base-content shadow-xl">
+        <div class="mt-8 card bg-primary text-primary-content shadow-xl">
           <div class="card-body">
             <h3 class="card-title">What is Traders?</h3>
             <p class="opacity-90">
-              Enabling micro-businesses. Connecting traders with their market.
+              Traders enables micro-businesses and connects traders with their markets.
             </p>
           </div>
         </div>
