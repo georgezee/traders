@@ -123,6 +123,24 @@ def about(request):
         {"page_meta": build_page_meta(request, metadata)},
     )
 
+def cr33(request):
+    title = "CR33"
+    description = "Placeholder page for the CR33 route."
+    canonical_path = "/cr33"
+    canonical_url = request.build_absolute_uri(canonical_path)
+    metadata = PageMeta(
+        title=title,
+        description=description,
+        canonical_path=canonical_path,
+        json_ld=build_json_ld_webpage(title, description, canonical_url),
+    )
+
+    return render(
+        request,
+        "pages/cr33.html",
+        {"page_meta": build_page_meta(request, metadata)},
+    )
+
 def theme_sample(request):
     return render(
         request,

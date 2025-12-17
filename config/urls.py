@@ -17,7 +17,7 @@ Including another URLconf
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
-from django.urls import path, include
+from django.urls import path, include, re_path
 
 from core.views import (
     FeedbackListCreateAPIView,
@@ -27,7 +27,7 @@ from core.views import (
     flag_content_modal_view,
     follow_view,
 )
-from pages.views import home, faq, privacy, terms, about, theme_sample, under_construction
+from pages.views import home, faq, privacy, terms, about, cr33, theme_sample, under_construction
 
 from allauth.account.views import LoginView, LogoutView, SignupView
 from django.views.i18n import set_language
@@ -63,6 +63,7 @@ urlpatterns = [
     # Static pages.
     path("", home, name="home"),
     path("about", about, name="about"),
+    re_path(r"^[cC][rR]33/?$", cr33, name="cr33"),
 
     path("faq", faq, name="faq"),
     path("privacy", privacy, name="privacy"),
