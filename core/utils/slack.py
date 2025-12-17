@@ -126,7 +126,11 @@ def build_feedback_admin_url(feedback: Feedback) -> str:
     """
     Construct an absolute admin URL for the feedback entry.
     """
-    base_url = getattr(settings, "BASE_URL", "https://example.com")
+    base_url = getattr(
+        settings,
+        "BASE_URL",
+        f"https://{getattr(settings, 'BASE_DOMAIN', 'example.com')}",
+    )
 
     base_url = base_url.rstrip("/")
     admin_path = settings.ADMIN_URL.strip("/")

@@ -30,7 +30,8 @@ class DjangoSettings(BaseSettings):
     celery_broker_url: str = Field("redis://localhost:6379/0", alias="CELERY_BROKER_URL")
     celery_result_backend: str = Field("redis://localhost:6379/1", alias="CELERY_RESULT_BACKEND")
     slack_webhook_app_feedback: str = Field("", alias="SLACK_WEBHOOK_APP_FEEDBACK")
-    base_url: str = Field("https://example.com", alias="BASE_URL")
+    base_domain: str = Field("example.com", alias="BASE_DOMAIN")
+    base_url: str | None = Field(None, alias="BASE_URL")
 
     @property
     def allowed_hosts(self) -> list[str]:

@@ -30,7 +30,8 @@ SECRET_KEY = settings.secret_key
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = settings.debug
 
-BASE_URL = getattr(settings, "base_url", "https://example.com").rstrip("/")
+BASE_DOMAIN = getattr(settings, "base_domain", "example.com").strip().strip("/")
+BASE_URL = (getattr(settings, "base_url", None) or f"https://{BASE_DOMAIN}").rstrip("/")
 
 ALLOWED_HOSTS = settings.allowed_hosts
 CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in ALLOWED_HOSTS if not host.startswith("localhost")]
@@ -111,6 +112,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "config.context_processors.default_metadata",
+                "config.context_processors.site_settings",
             ],
         },
     },
@@ -226,7 +228,7 @@ CACHES = {
 }
 
 SEGNO_DEFAULTS = getattr(settings, "segno_defaults", {"error": "q"})
-QR_CODE_BASE_URL = getattr(settings, "qr_code_base_url", "https://example.com")
+QR_CODE_BASE_URL = (getattr(settings, "qr_code_base_url", None) or BASE_URL).rstrip("/")
 QR_CODE_SCALE = getattr(settings, "qr_code_scale", 6)
 QR_CODE_CACHE_TIMEOUT = getattr(settings, "qr_code_cache_timeout", 60 * 60 * 24 * 30)
 
@@ -239,7 +241,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 ADMIN_URL = "admin/"
 
 ## SMTP Configuration
-DEFAULT_FROM_EMAIL = "Traders Team <hello@example.com>"
+DEFAULT_FROM_EMAIL = f"Traders Team <hello@{BASE_DOMAIN}>"
 DEFAULT_CONTACT_EMAIL = settings.default_contact_email
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_PORT = 2587 # We use non-standard port as some hosts block 587.
@@ -381,7 +383,7 @@ JAZZMIN_SETTINGS = {
     ],
 
     "usermenu_links": [
-        {"name": "GitHub", "url": "https://github.com/example.com", "new_window": True},
+        {"name": "GitHub", "url": "https://github.com/georgezee/traders", "new_window": True},
     ],
 
     "show_sidebar": True,

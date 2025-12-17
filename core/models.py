@@ -81,7 +81,11 @@ class Feedback(models.Model):
     def send_notification_email(self):
         try:
             subject = f"[Traders] Feedback: {self.feedback_category}"
-            from_email = getattr(settings, "DEFAULT_FROM_EMAIL", "noreply@example.com")
+            from_email = getattr(
+                settings,
+                "DEFAULT_FROM_EMAIL",
+                f"noreply@{getattr(settings, 'BASE_DOMAIN', 'example.com')}",
+            )
             to_email = [getattr(settings, "DEFAULT_CONTACT_EMAIL", None)]
 
             if not to_email[0]:
