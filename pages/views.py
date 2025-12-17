@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_http_methods
 
+from core.models import Feedback
 from config.metadata import PageMeta, build_json_ld_webpage, build_page_meta
 from payments.exchange import get_or_update_exchange_rate
 from payments.views import TIERS
@@ -123,6 +124,7 @@ def about(request):
         {"page_meta": build_page_meta(request, metadata)},
     )
 
+@require_http_methods(["GET", "POST"])
 def cr33(request):
     title = "CR33"
     description = "Placeholder page for the CR33 route."
@@ -135,10 +137,90 @@ def cr33(request):
         json_ld=build_json_ld_webpage(title, description, canonical_url),
     )
 
+    default_values = {
+        "intent": "bell",
+        "slot": "",
+        "area": "Scott Estate",
+        "address": "",
+        "contact": "",
+    }
+    form_values = {**default_values}
+    form_errors: list[str] = []
+
+    if request.method == "POST":
+        form_values = {
+            "intent": (request.POST.get("intent") or "").strip() or default_values["intent"],
+            "slot": (request.POST.get("slot") or "").strip(),
+            "area": (request.POST.get("area") or "").strip() or default_values["area"],
+            "address": (request.POST.get("address") or "").strip(),
+            "contact": (request.POST.get("contact") or "").strip(),
+        }
+
+        if form_values["intent"] == "slot" and not form_values["slot"]:
+            form_errors.append("Please pick a 15-minute slot.")
+
+        if not form_values["contact"]:
+            form_errors.append("Add a phone number or email so we can confirm your booking.")
+
+        if not form_values["address"]:
+            form_errors.append("Please share your house number and street.")
+
+        if not form_errors:
+            intent_labels = {
+                "bell": "Ring my bell during the window",
+                "slot": "Come at a specific time",
+                "future": "Interested in a future visit",
+            }
+
+            message_parts = [
+                "CR33 knife sharpening booking interest.",
+                f"Intent: {intent_labels.get(form_values['intent'], 'Not specified')}",
+            ]
+
+            if form_values["intent"] == "slot" and form_values["slot"]:
+                message_parts.append(f"Preferred slot: {form_values['slot']}")
+            elif form_values["intent"] == "bell":
+                message_parts.append("Preferred slot: Anytime during the 09:00-11:30 window.")
+            elif form_values["intent"] == "future":
+                message_parts.append("Preferred slot: Interested in future visits.")
+
+            message_parts.extend(
+                [
+                    f"Area: {form_values['area'] or default_values['area']}",
+                    f"Address: {form_values['address'] or 'Not provided'}",
+                    f"Contact: {form_values['contact'] or 'Not provided'}",
+                ]
+            )
+
+            contact_value = form_values["contact"]
+            email_value = contact_value if "@" in contact_value else ""
+            phone_value = "" if email_value else contact_value
+
+            feedback = Feedback(
+                name=form_values.get("name", ""),
+                email=email_value,
+                phone=phone_value,
+                feedback_type="Contact",
+                feedback_category="General",
+                message="\n".join(message_parts),
+                target="CR33",
+            )
+
+            if request.user.is_authenticated:
+                feedback.user = request.user
+
+            feedback.save()
+            messages.success(request, "Thanks! We'll confirm your knife sharpening slot.")
+            return redirect("cr33")
+
     return render(
         request,
         "pages/cr33.html",
-        {"page_meta": build_page_meta(request, metadata)},
+        {
+            "page_meta": build_page_meta(request, metadata),
+            "form_values": form_values,
+            "form_errors": form_errors,
+        },
     )
 
 def theme_sample(request):
