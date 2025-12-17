@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<section class="bg-secondary text-secondary-content">
+  <div class="max-w-6xl mx-auto px-4 md:px-8 py-10">
+    <div class="max-w-2xl">
+      <h2 class="text-4xl md:text-5xl font-bold leading-tight">
+        Knife sharpening
+      </h2>
+
+      <p class="mt-5 text-lg opacity-90">
+        Quick, and done at your gate.
+      </p>
+    </div>
+
+    <div class="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div class="lg:col-span-5">
+        <div class="card bg-base-100 text-base-content shadow-xl w-full">
+          <figure class="px-8 pt-8">
+            <img
+              src="/static/images/pages/patrick-profile.png"
+              alt="Patrick Ndlovu"
+              class="rounded-2xl w-40 h-40 object-cover ring ring-primary ring-offset-base-100 ring-offset-4"
+            />
+          </figure>
+
+          <div class="card-body items-center text-center">
+            <h1 class="card-title text-2xl">Patrick Ndlovu</h1>
+            <p class="opacity-80">Knife sharpening</p>
+
+            <div class="mt-2 flex items-center gap-2">
+              <div class="rating rating-sm">
+                <input type="radio" class="mask mask-star-2 bg-orange-400" checked />
+                <input type="radio" class="mask mask-star-2 bg-orange-400" checked />
+                <input type="radio" class="mask mask-star-2 bg-orange-400" checked />
+                <input type="radio" class="mask mask-star-2 bg-orange-400" checked />
+                <input type="radio" class="mask mask-star-2 bg-orange-400" />
+              </div>
+              <span class="font-semibold">4.7</span>
+              <span class="opacity-70">(6 reviews)</span>
+            </div>
+
+            <div class="divider my-3"></div>
+
+            <div class="stats stats-vertical w-full bg-base-200">
+              <div class="stat">
+                <div class="stat-title">Area</div>
+                <div class="stat-value text-lg">Scott Estate</div>
+              </div>
+              <div class="stat">
+                <div class="stat-title">Date</div>
+                <div class="stat-value text-lg">Tuesday 23 December 2025</div>
+              </div>
+              <div class="stat">
+                <div class="stat-title">Time window</div>
+                <div class="stat-value text-lg">09:00–11:30</div>
+              </div>
+            </div>
+
+            <a href="#booking" class="btn btn-primary mt-4 w-full sm:hidden">
+              I’m interested
+            </a>
+
+            <div class="mt-6 flex flex-col items-center gap-2">
+              <img
+                src="/static/images/pages/victorinox-logo.png"
+                alt="Victorinox"
+                class="h-10 object-contain"
+              />
+              <span class="text-sm opacity-80">
+                Victorinox blade sharpening steels
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-7">
+        <div id="booking" class="card bg-base-100 text-base-content shadow-xl" x-data="{ intent: 'bell' }">
+          <div class="card-body">
+            <p class="text-lg md:text-xl font-medium">
+              Tuesday 23 December 2025, between
+              <span class="font-semibold">09:00</span> and
+              <span class="font-semibold">11:30</span>.
+            </p>
+
+            <form class="mt-6 space-y-8">
+              <section class="space-y-3">
+                <div class="space-y-2">
+                  <label class="label cursor-pointer justify-start gap-3 rounded-xl bg-base-200 px-4 py-3">
+                    <input type="radio" name="intent" class="radio radio-primary" value="bell" x-model="intent" />
+                    <span class="label-text font-medium">I’m interested, ring my bell during this time.</span>
+                  </label>
+
+                  <label class="label cursor-pointer justify-start gap-3 rounded-xl bg-base-200 px-4 py-3">
+                    <input type="radio" name="intent" class="radio radio-primary" value="slot" x-model="intent" />
+                    <span class="label-text font-medium">Please come at a specific time</span>
+                  </label>
+
+                  <label class="label cursor-pointer justify-start gap-3 rounded-xl bg-base-200 px-4 py-3">
+                    <input type="radio" name="intent" class="radio radio-primary" value="future" x-model="intent" />
+                    <span class="label-text font-medium">I can’t do this time, but I’m interested for future visits</span>
+                  </label>
+                </div>
+
+                <div class="mt-4 space-y-3" x-show="intent === 'slot'" x-cloak>
+                  <div class="alert alert-info">
+                    <span>Pick a 15-minute slot between 09:00 and 11:30.</span>
+                  </div>
+
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <label class="label cursor-pointer justify-start gap-3 rounded-xl bg-base-200 px-4 py-3">
+                      <input type="radio" name="slot" class="radio radio-primary" />
+                      <span class="label-text font-medium">09:00–09:15</span>
+                    </label>
+
+                    <label class="label cursor-not-allowed justify-start gap-3 rounded-xl bg-base-200/50 px-4 py-3 opacity-60">
+                      <input type="radio" name="slot" class="radio radio-primary" disabled />
+                      <span class="label-text font-medium">09:15–09:30</span>
+                      <span class="badge badge-ghost ml-auto">Not available</span>
+                    </label>
+
+                    <label class="label cursor-pointer justify-start gap-3 rounded-xl bg-base-200 px-4 py-3">
+                      <input type="radio" name="slot" class="radio radio-primary" />
+                      <span class="label-text font-medium">09:30–09:45</span>
+                    </label>
+
+                    <label class="label cursor-pointer justify-start gap-3 rounded-xl bg-base-200 px-4 py-3">
+                      <input type="radio" name="slot" class="radio radio-primary" />
+                      <span class="label-text font-medium">09:45–10:00</span>
+                    </label>
+
+                    <label class="label cursor-not-allowed justify-start gap-3 rounded-xl bg-base-200/50 px-4 py-3 opacity-60">
+                      <input type="radio" name="slot" class="radio radio-primary" disabled />
+                      <span class="label-text font-medium">10:00–10:15</span>
+                      <span class="badge badge-ghost ml-auto">Not available</span>
+                    </label>
+
+                    <label class="label cursor-pointer justify-start gap-3 rounded-xl bg-base-200 px-4 py-3">
+                      <input type="radio" name="slot" class="radio radio-primary" />
+                      <span class="label-text font-medium">10:15–10:30</span>
+                    </label>
+
+                    <label class="label cursor-pointer justify-start gap-3 rounded-xl bg-base-200 px-4 py-3">
+                      <input type="radio" name="slot" class="radio radio-primary" />
+                      <span class="label-text font-medium">10:30–10:45</span>
+                    </label>
+
+                    <label class="label cursor-pointer justify-start gap-3 rounded-xl bg-base-200 px-4 py-3">
+                      <input type="radio" name="slot" class="radio radio-primary" />
+                      <span class="label-text font-medium">10:45–11:00</span>
+                    </label>
+
+                    <label class="label cursor-pointer justify-start gap-3 rounded-xl bg-base-200 px-4 py-3">
+                      <input type="radio" name="slot" class="radio radio-primary" />
+                      <span class="label-text font-medium">11:00–11:15</span>
+                    </label>
+
+                    <label class="label cursor-not-allowed justify-start gap-3 rounded-xl bg-base-200/50 px-4 py-3 opacity-60">
+                      <input type="radio" name="slot" class="radio radio-primary" disabled />
+                      <span class="label-text font-medium">11:15–11:30</span>
+                      <span class="badge badge-ghost ml-auto">Not available</span>
+                    </label>
+                  </div>
+                </div>
+              </section>
+
+              <section class="space-y-3">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <label class="form-control w-full">
+                    <div class="label">
+                      <span class="label-text">Your area</span>
+                    </div>
+                    <input type="text" class="input input-bordered w-full" value="Scott Estate" readonly />
+                  </label>
+
+                  <label class="form-control w-full">
+                    <div class="label">
+                      <span class="label-text">House number and street</span>
+                    </div>
+                    <input type="text" class="input input-bordered w-full" placeholder="e.g. 12 Acacia Ave" />
+                  </label>
+                </div>
+
+                <label class="form-control w-full">
+                  <div class="label">
+                    <span class="label-text">Your contact number or email (for booking changes)</span>
+                  </div>
+                  <input type="text" class="input input-bordered w-full" placeholder="e.g. 082 123 4567 or name@email.com" />
+                </label>
+
+                <div class="mt-5 flex flex-col sm:flex-row gap-3">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <button type="reset" class="btn btn-ghost">Clear</button>
+                </div>
+              </section>
+            </form>
+          </div>
+        </div>
+
+        <div class="mt-8 card bg-accent text-accent-content shadow-xl">
+          <div class="card-body py-6">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div class="text-center sm:text-left">
+                <div class="text-4xl md:text-5xl font-bold">R50</div>
+                <div class="text-lg opacity-90">for one</div>
+              </div>
+
+              <div class="divider sm:divider-horizontal m-0 w-full sm:w-auto">or</div>
+
+              <div class="text-center sm:text-right">
+                <div class="text-4xl md:text-5xl font-bold">R150</div>
+                <div class="text-lg opacity-90">for all</div>
+              </div>
+            </div>
+
+            <div class="mt-4 text-sm opacity-90 text-center">
+              Pay cash or online
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8 card bg-base-100 text-base-content shadow-xl">
+          <div class="card-body">
+            <h3 class="card-title">What is Traders?</h3>
+            <p class="opacity-90">
+              Enabling micro-businesses. Connecting traders with their market.
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-6 text-center opacity-80">
+          <p class="text-sm">
+            Flyer code <span class="font-mono font-semibold">CR33</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
