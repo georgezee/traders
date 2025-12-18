@@ -7,11 +7,11 @@
   <div class="max-w-6xl mx-auto px-4 md:px-8 py-10">
     <div class="max-w-2xl">
       <h2 class="text-4xl md:text-5xl font-bold leading-tight">
-        Knife sharpening
+        Keep SA Sharp!
       </h2>
 
       <p class="mt-5 text-lg opacity-90">
-        Quick, and done at your gate.
+        Knife sharpening service in your area - quick and while you wait.
       </p>
     </div>
 
@@ -28,7 +28,7 @@
 
           <div class="card-body items-center text-center">
             <h1 class="card-title text-2xl">Patrick Ndlovu</h1>
-            <p class="opacity-80">Knife sharpening</p>
+            <p class="opacity-80">Knife sharpening fundi</p>
 
             <div class="mt-2 flex items-center gap-2">
               <div class="rating rating-sm rating-half">
@@ -80,10 +80,10 @@
               <img
                 src="/static/images/pages/victorinox-logo.png"
                 alt="Victorinox"
-                class="h-10 object-contain"
+                class="h-20 object-contain"
               />
               <span class="text-sm opacity-80">
-                Victorinox blade sharpening steels
+                blade sharpening steels
               </span>
             </div>
           </div>
@@ -120,18 +120,18 @@
 
                   <label class="label cursor-pointer justify-start gap-3 rounded-xl bg-base-200 px-4 py-3">
                     <input type="radio" name="intent" class="radio radio-primary" value="slot" x-model="intent" {% if form_values.intent == 'slot' %}checked{% endif %} />
-                    <span class="label-text font-medium">Please come at a specific time</span>
+                    <span class="label-text font-medium">Please come at a specific time.</span>
                   </label>
 
                   <label class="label cursor-pointer justify-start gap-3 rounded-xl bg-base-200 px-4 py-3">
                     <input type="radio" name="intent" class="radio radio-primary" value="future" x-model="intent" {% if form_values.intent == 'future' %}checked{% endif %} />
-                    <span class="label-text font-medium">I can’t do this time, but I’m interested for future visits</span>
+                    <span class="label-text font-medium">I can’t do this time, but I’m interested for future visits.</span>
                   </label>
                 </div>
 
                 <div class="mt-4 space-y-3" x-show="intent === 'slot'" x-cloak>
-                  <div class="alert alert-info">
-                    <span>Pick a 15-minute slot between 09:00 and 11:30.</span>
+                  <div class="alert bg-primary text-primary-content">
+                    <span>Pick a slot between 09:00 and 11:30.</span>
                   </div>
 
                   <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -216,7 +216,7 @@
                 </label>
 
                 <div class="mt-5 flex flex-col sm:flex-row gap-3">
-                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <button type="submit" class="btn btn-primary w-30">Send</button>
                   <button type="reset" class="btn btn-ghost">Clear</button>
                 </div>
               </section>
@@ -251,6 +251,11 @@
             <h3 class="card-title">What is Traders?</h3>
             <p class="opacity-90">
               Traders enables micro-businesses and connects traders with their markets.
+              <ul>
+                <li>- providers service multiple homes efficiently</li>
+                <li>- efficient service is a win for everyone</li>
+              </ul>
+
             </p>
           </div>
         </div>
